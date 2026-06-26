@@ -8,22 +8,23 @@ data:
   username: springapp
   password: mongodb@123
 ---
-# Replication Controller for springapp
-apiVersion: v1
-kind: ReplicationController
+# Deployment for springapp
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: spring-controller
 spec:
   replicas: 1
   selector:
-    app: springboot
+    matchLabels:
+      app: springboot
   template:
     metadata:
       labels:
         app: springboot
     spec:
       containers:
-      - image: dockerhandson/spring-boot-mongo
+      - image: dassok14/springboot-mongo-docker:latest
         name: springboot
         ports:
         - containerPort: 8080  
@@ -54,15 +55,16 @@ spec:
   selector:
     app: springboot
 ---
-# Mongo RC with host path Volume
-apiVersion: v1
-kind: ReplicationController
+# Deployment for Mongo with host path Volume
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: mongo-controller
 spec:
   replicas: 1
   selector:
-    app: mongo
+    matchLabels:
+      app: mongo
   template:
     metadata:
       labels:
@@ -92,7 +94,7 @@ spec:
         hostPath:
          path: /tmp/dbbackup
 ---
-# Mongo Node Port RC
+# Mongo ClusterIP Service
 apiVersion: v1
 kind: Service
 metadata:
